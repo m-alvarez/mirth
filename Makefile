@@ -7,7 +7,7 @@ QEMUFLAGS = -machine virt -bios default -nographic -serial mon:stdio --no-reboot
 run: kernel.elf
 
 kernel.elf: kernel.S
-	${CC} kernel.S ${CFLAGS} -o kernel.elf
+	${CC} kernel.S -g ${CFLAGS} -o kernel.elf
 
 kernel_.S: kernel.elf
 	llvm-objdump -D kernel.elf > kernel_.S
@@ -17,5 +17,8 @@ clean:
 
 run: kernel.elf kernel_.S
 	${QEMU} ${QEMUFLAGS} -kernel kernel.elf
+
+debug: kernel.elf kernel_.S
+	${QEMU} ${QEMUFLAGS} -s -S -kernel kernel.elf
 
 .PHONY: run
